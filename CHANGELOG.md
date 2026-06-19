@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.2](https://github.com/AlexeyPahomov/hestomapia/compare/v0.0.1...v0.0.2) (2026-06-19)
+
+
+### Features
+
+* геолокация ([a6c0e03](https://github.com/AlexeyPahomov/hestomapia/commit/a6c0e034374a4ca72d6fcc5233639d7e0a69449d))
+
+
+### Bug Fixes
+
+* расположение заголовка карточки ([18da6fe](https://github.com/AlexeyPahomov/hestomapia/commit/18da6fe1f26a745eb962f8b1ed5bb9dfc4c55c1e))
+
 ### 0.0.1 (2026-06-19)
 
 
