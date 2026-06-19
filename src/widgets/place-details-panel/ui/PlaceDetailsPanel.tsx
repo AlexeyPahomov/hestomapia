@@ -46,10 +46,10 @@ export function PlaceDetailsPanel({
           <span className="h-1 w-10 rounded-full bg-gray-300" aria-hidden="true" />
         </div>
 
-        <div className="flex items-start justify-between gap-3 border-b border-gray-200 px-4 py-3">
+        <div className="flex items-center justify-between gap-3 border-b border-gray-200 px-4 py-3">
           <h2
             id="place-details-title"
-            className="line-clamp-2 text-base font-semibold text-gray-900"
+            className="line-clamp-2 min-w-0 flex-1 text-base font-semibold text-gray-900"
           >
             {title}
           </h2>
