@@ -1,13 +1,57 @@
 @import 'tailwindcss';
 
+@theme {
+  --animate-place-backdrop-enter: place-backdrop-enter 0.2s ease-out;
+  --animate-place-panel-enter: place-panel-enter-mobile 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+  --animate-place-panel-enter-desktop: place-panel-enter-desktop 0.25s ease-out;
+
+  @keyframes place-backdrop-enter {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes place-panel-enter-mobile {
+    from {
+      opacity: 0;
+      transform: translateY(100%);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes place-panel-enter-desktop {
+    from {
+      opacity: 0;
+      transform: translateX(1rem);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+}
+
 @layer base {
   html,
   body,
   #root {
-    @apply m-0 h-full w-full;
+    margin: 0;
+    width: 100%;
+    height: 100%;
   }
 
   body {
-    @apply font-sans antialiased;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 }

@@ -1,6 +1,8 @@
 import { useEffect, useRef } from 'react';
 import type { Map as MaplibreMap } from 'maplibre-gl';
 import { isAbortError, useAbortControllerRef } from '@shared/lib/async';
+import { bboxToKey, getBboxFromMap } from '@shared/lib/maplibre/bbox';
+import { createBboxReloadGuard } from '../lib/bbox-reload-guard';
 import { bindPlacesLayerEvents } from '../lib/bind-places-layer-events';
 import { loadPlacesForMap } from '../lib/load-places-for-map';
 import { ensurePlacesLayers, hasPlacesSource } from '../lib/places-layers';
@@ -17,6 +19,7 @@ export function useWikimapiaPlacesOnMap({
   const { create: createAbortController, abort: abortRequest } =
     useAbortControllerRef();
   const onPlaceClickRef = useRef(onPlaceClick);
+  const bboxReloadGuardRef = useRef(createBboxReloadGuard());
 
   onPlaceClickRef.current = onPlaceClick;
 
@@ -25,11 +28,21 @@ export function useWikimapiaPlacesOnMap({
       return;
     }
 
-    const loadPlaces = async () => {
+    const bboxReloadGuard = bboxReloadGuardRef.current;
+
+    const loadPlaces = async (force = false) => {
+      const bbox = getBboxFromMap(map);
+      const bboxKey = bboxToKey(bbox);
+
+      if (!bboxReloadGuard.shouldReload(bboxKey, force)) {
+        return;
+      }
+
       const abortController = createAbortController();
 
       try {
-        await loadPlacesForMap(map, abortController.signal);
+        await loadPlacesForMap(map, bbox, abortController.signal);
+        bboxReloadGuard.markLoaded(bboxKey);
       } catch (cause) {
         if (isAbortError(cause)) {
           return;
@@ -41,7 +54,7 @@ export function useWikimapiaPlacesOnMap({
 
     const handleLoad = () => {
       ensurePlacesLayers(map);
-      void loadPlaces();
+      void loadPlaces(true);
     };
 
     const handleMoveEnd = () => {
@@ -66,6 +79,7 @@ export function useWikimapiaPlacesOnMap({
 
     return () => {
       abortRequest();
+      bboxReloadGuard.reset();
       map.off('load', handleLoad);
       map.off('moveend', handleMoveEnd);
       unbindLayerEvents();

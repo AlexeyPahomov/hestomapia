@@ -9,6 +9,12 @@ type PlaceDetailsPanelProps = {
   onClose: () => void;
 };
 
+const backdropClassName =
+  'animate-place-backdrop-enter motion-reduce:animate-none fixed inset-0 z-40 cursor-pointer bg-black/40 md:hidden';
+
+const panelClassName =
+  'animate-place-panel-enter md:animate-place-panel-enter-desktop motion-reduce:animate-none fixed inset-x-0 bottom-0 z-50 flex max-h-[min(85vh,100%)] flex-col rounded-t-2xl border-t border-gray-200 bg-white shadow-2xl md:inset-x-auto md:inset-y-0 md:right-0 md:bottom-auto md:left-auto md:h-full md:max-h-none md:w-96 md:rounded-none md:border-l md:border-t-0';
+
 export function PlaceDetailsPanel({
   place,
   isLoading,
@@ -27,11 +33,11 @@ export function PlaceDetailsPanel({
         type="button"
         onClick={onClose}
         aria-label="Закрыть карточку объекта"
-        className="fixed inset-0 z-40 bg-black/40 md:hidden"
+        className={backdropClassName}
       />
 
       <aside
-        className="fixed inset-x-0 bottom-0 z-50 flex max-h-[min(85vh,100%)] flex-col rounded-t-2xl border-t border-gray-200 bg-white shadow-2xl md:static md:z-auto md:h-full md:max-h-none md:w-96 md:shrink-0 md:rounded-none md:border-l md:border-t-0 md:shadow-none"
+        className={panelClassName}
         role="dialog"
         aria-modal="true"
         aria-labelledby="place-details-title"
@@ -51,7 +57,7 @@ export function PlaceDetailsPanel({
             type="button"
             onClick={onClose}
             aria-label="Закрыть"
-            className="shrink-0 rounded-full p-2 text-gray-500 transition hover:bg-gray-100 hover:text-gray-700"
+            className="shrink-0 cursor-pointer rounded-full p-2 text-gray-500 transition hover:bg-gray-100 hover:text-gray-700"
           >
             <CloseIcon className="h-5 w-5" />
           </button>
