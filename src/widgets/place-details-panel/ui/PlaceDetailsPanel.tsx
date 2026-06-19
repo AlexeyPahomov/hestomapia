@@ -13,7 +13,7 @@ const backdropClassName =
   'animate-place-backdrop-enter motion-reduce:animate-none fixed inset-0 z-40 cursor-pointer bg-black/40 md:hidden';
 
 const panelClassName =
-  'animate-place-panel-enter md:animate-place-panel-enter-desktop motion-reduce:animate-none fixed inset-x-0 bottom-0 z-50 flex max-h-[min(85vh,100%)] flex-col rounded-t-2xl border-t border-gray-200 bg-white shadow-2xl md:inset-x-auto md:inset-y-0 md:right-0 md:bottom-auto md:left-auto md:h-full md:max-h-none md:w-96 md:rounded-none md:border-l md:border-t-0';
+  'animate-place-panel-enter md:animate-place-panel-enter-desktop motion-reduce:animate-none fixed inset-x-0 bottom-0 z-50 flex max-h-[min(70vh,100%)] flex-col rounded-t-2xl border-t border-gray-200 bg-white shadow-2xl md:inset-x-auto md:inset-y-0 md:right-0 md:bottom-auto md:left-auto md:h-full md:max-h-none md:w-96 md:rounded-none md:border-l md:border-t-0';
 
 export function PlaceDetailsPanel({
   place,
