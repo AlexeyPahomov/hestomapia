@@ -7,20 +7,18 @@ const Map = lazy(() =>
 );
 
 export function MainPage() {
-  const {
-    selectedPlace,
-    isLoading,
-    error,
-    selectPlace,
-    clearSelection,
-  } = usePlaceDetails();
+  const { selectedPlace, isLoading, error, selectPlace, clearSelection } =
+    usePlaceDetails();
 
   return (
     <main className="relative h-full w-full">
       <Suspense
         fallback={
-          <div className="flex h-full w-full items-center justify-center text-base text-gray-500">
-            Загрузка карты…
+          <div className="flex h-full w-full flex-col items-center justify-center gap-3 text-center">
+            <h1 className="text-xl font-semibold text-gray-700">
+              Добро пожаловать в Хестомапию!
+            </h1>
+            <p className="text-base text-gray-500">Загрузка карты…</p>
           </div>
         }
       >
