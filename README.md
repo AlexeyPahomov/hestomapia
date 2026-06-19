@@ -27,12 +27,6 @@ npm run dev
 
 Запросы к Wikimapia API идут через `/api/wikimapia`. Ключ подставляется на сервере и не попадает в клиентский бандл.
 
-## Деплой на Vercel
-
-1. Добавьте переменную окружения **`WIKIMAPIA_API_KEY`** для окружения **Production**.
-2. После изменения переменных сделайте **Redeploy** — без этого ключ не подхватится.
-3. Задеплойте проект — маршрут `api/wikimapia.ts` проксирует запросы к Wikimapia.
-
 ## Структура проекта (FSD)
 
 ```
@@ -44,3 +38,28 @@ src/
   entities/   — бизнес-сущности
   shared/     — переиспользуемый код (config, lib, ui)
 ```
+
+## Релизы
+
+Версии и `CHANGELOG.md` генерируются через [standard-version](https://github.com/conventional-changelog/standard-version) по [Conventional Commits](https://www.conventionalcommits.org/).
+
+```bash
+# первый релиз (создаст CHANGELOG и тег v0.0.1)
+npm run release:first
+
+# следующие релизы — версия по коммитам с последнего тега
+npm run release
+
+# принудительный bump
+npm run release:patch
+npm run release:minor
+npm run release:major
+```
+
+После релиза: `git push --follow-tags origin main`.
+
+## Деплой на Vercel
+
+1. Добавьте переменную окружения **`WIKIMAPIA_API_KEY`** для окружения **Production**.
+2. После изменения переменных сделайте **Redeploy** — без этого ключ не подхватится.
+3. Задеплойте проект — маршрут `api/wikimapia.ts` проксирует запросы к Wikimapia.
