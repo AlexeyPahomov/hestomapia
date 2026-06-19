@@ -2,7 +2,8 @@
 
 @theme {
   --animate-place-backdrop-enter: place-backdrop-enter 0.2s ease-out;
-  --animate-place-panel-enter: place-panel-enter-mobile 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+  --animate-place-panel-enter: place-panel-enter-mobile 0.3s
+    cubic-bezier(0.32, 0.72, 0, 1);
   --animate-place-panel-enter-desktop: place-panel-enter-desktop 0.25s ease-out;
 
   @keyframes place-backdrop-enter {
