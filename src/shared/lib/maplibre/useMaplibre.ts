@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import maplibregl from 'maplibre-gl';
 import { DEFAULT_MAP_CENTER, DEFAULT_MAP_ZOOM } from '@shared/config/map';
 import { OSM_RASTER_STYLE } from './osm-style';
@@ -6,6 +6,7 @@ import { OSM_RASTER_STYLE } from './osm-style';
 export function useMaplibre() {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
+  const [map, setMap] = useState<maplibregl.Map | null>(null);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -14,21 +15,23 @@ export function useMaplibre() {
       return;
     }
 
-    const map = new maplibregl.Map({
+    const mapInstance = new maplibregl.Map({
       container,
       style: OSM_RASTER_STYLE,
       center: DEFAULT_MAP_CENTER,
       zoom: DEFAULT_MAP_ZOOM,
     });
 
-    map.addControl(new maplibregl.NavigationControl(), 'top-right');
-    mapRef.current = map;
+    mapInstance.addControl(new maplibregl.NavigationControl(), 'top-right');
+    mapRef.current = mapInstance;
+    setMap(mapInstance);
 
     return () => {
-      map.remove();
+      mapInstance.remove();
       mapRef.current = null;
+      setMap(null);
     };
   }, []);
 
-  return containerRef;
+  return { containerRef, map };
 }
