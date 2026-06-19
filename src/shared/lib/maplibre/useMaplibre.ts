@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import maplibregl from 'maplibre-gl';
-import { DEFAULT_MAP_CENTER, DEFAULT_MAP_ZOOM } from '@shared/config/map';
+import { DEFAULT_FIT_BOUNDS_PADDING, DEFAULT_MAP_BOUNDS } from '@shared/config/map';
+import { addMapControls } from './map-controls';
 import { OSM_RASTER_STYLE } from './osm-style';
+import { useMapUserGeolocation } from './use-map-user-geolocation';
 
 export function useMaplibre() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -18,11 +20,12 @@ export function useMaplibre() {
     const mapInstance = new maplibregl.Map({
       container,
       style: OSM_RASTER_STYLE,
-      center: DEFAULT_MAP_CENTER,
-      zoom: DEFAULT_MAP_ZOOM,
+      bounds: DEFAULT_MAP_BOUNDS,
+      fitBoundsOptions: { padding: DEFAULT_FIT_BOUNDS_PADDING },
     });
 
-    mapInstance.addControl(new maplibregl.NavigationControl(), 'top-right');
+    addMapControls(mapInstance);
+
     mapRef.current = mapInstance;
     setMap(mapInstance);
 
@@ -32,6 +35,8 @@ export function useMaplibre() {
       setMap(null);
     };
   }, []);
+
+  useMapUserGeolocation(map);
 
   return { containerRef, map };
 }
