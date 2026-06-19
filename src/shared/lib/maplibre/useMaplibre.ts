@@ -3,10 +3,10 @@ import maplibregl from 'maplibre-gl';
 import { DEFAULT_FIT_BOUNDS_PADDING, DEFAULT_MAP_BOUNDS } from '@shared/config/map';
 import { addMapControls } from './map-controls';
 import { OSM_RASTER_STYLE } from './osm-style';
+import { useMapLoadEvent } from './use-map-load-event';
 import { useMapUserGeolocation } from './use-map-user-geolocation';
 
-export function useMaplibre() {
-  const containerRef = useRef<HTMLDivElement>(null);
+export function useMaplibre(onMapLoad?: () => void) {  const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const [map, setMap] = useState<maplibregl.Map | null>(null);
 
@@ -37,6 +37,7 @@ export function useMaplibre() {
   }, []);
 
   useMapUserGeolocation(map);
+  useMapLoadEvent(map, onMapLoad);
 
   return { containerRef, map };
 }

@@ -12,8 +12,3 @@ export function getBboxFromMap(map: MaplibreMap): MapBbox {
   };
 }
 
-export function bboxToKey(bbox: MapBbox): string {
-  return [bbox.west, bbox.south, bbox.east, bbox.north]
-    .map((value) => value.toFixed(5))
-    .join(',');
-}

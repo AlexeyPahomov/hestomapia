@@ -1,4 +1,5 @@
-import type { Map as MaplibreMap } from 'maplibre-gl';
+import type { FeatureCollection, Polygon } from 'geojson';
+import type { GeoJSONSource, Map as MaplibreMap } from 'maplibre-gl';
 import {
   PLACES_FILL_LAYER_ID,
   PLACES_LAYER_PAINT,
@@ -46,4 +47,13 @@ export function ensurePlacesLayers(map: MaplibreMap) {
 
 export function hasPlacesSource(map: MaplibreMap): boolean {
   return Boolean(map.getSource(WIKIMAPIA_SOURCE_ID));
+}
+
+export function setPlacesGeoJSONOnMap(
+  map: MaplibreMap,
+  geojson: FeatureCollection<Polygon>,
+): void {
+  const source = map.getSource(WIKIMAPIA_SOURCE_ID) as GeoJSONSource | undefined;
+
+  source?.setData(geojson);
 }
