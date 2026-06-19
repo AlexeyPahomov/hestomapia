@@ -17,6 +17,18 @@ export type WikimapiaPlaceSummary = {
   polygon?: WikimapiaPolygonPoint[];
 };
 
+export type WikimapiaCoordinates = {
+  lat: number;
+  lon: number;
+};
+
+export type WikimapiaComment = {
+  id: string;
+  name: string;
+  message: string;
+  date?: number;
+};
+
 export type WikimapiaPlaceDetails = WikimapiaPlaceByIdResponse;
 
 export type WikimapiaRawPlaceSummary = {
@@ -43,4 +55,19 @@ export type WikimapiaPlaceByIdResponse = {
   title: string;
   description?: string;
   url?: string;
+  coordinates?: WikimapiaCoordinates;
+  comments: WikimapiaComment[];
+};
+
+export type WikimapiaRawComment = {
+  num?: number;
+  name: string;
+  message: string;
+  date?: number;
+  is_deleted?: boolean;
+};
+
+export type WikimapiaRawLocation = {
+  lat?: number;
+  lon?: number;
 };

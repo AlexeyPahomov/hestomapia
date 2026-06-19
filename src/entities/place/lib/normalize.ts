@@ -1,7 +1,10 @@
 import type {
+  WikimapiaComment,
   WikimapiaPlaceByIdResponse,
   WikimapiaPlaceSummary,
   WikimapiaPlacesByAreaResponse,
+  WikimapiaRawComment,
+  WikimapiaRawLocation,
   WikimapiaRawPlaceSummary,
 } from '@shared/api/wikimapia';
 
@@ -11,7 +14,20 @@ type RawPlaceById = WikimapiaPlaceByIdResponse & {
     description?: string;
     url?: string;
   };
+  location?: WikimapiaRawLocation;
+  comments?: WikimapiaRawComment[];
 };
+
+function normalizeComments(comments: WikimapiaRawComment[] = []): WikimapiaComment[] {
+  return comments
+    .filter((comment) => !comment.is_deleted && comment.message.trim())
+    .map((comment, index) => ({
+      id: String(comment.num ?? `${comment.name}-${comment.date ?? index}`),
+      name: comment.name,
+      message: comment.message,
+      date: comment.date,
+    }));
+}
 
 function normalizePlaceSummary(place: WikimapiaRawPlaceSummary): WikimapiaPlaceSummary | null {
   const id = Number(place.id);
@@ -29,11 +45,18 @@ function normalizePlaceSummary(place: WikimapiaRawPlaceSummary): WikimapiaPlaceS
 }
 
 export function normalizePlaceById(raw: RawPlaceById): WikimapiaPlaceByIdResponse {
+  const location = raw.location;
+
   return {
     id: raw.id,
     title: raw.title ?? raw.main?.title ?? '',
     description: raw.description ?? raw.main?.description,
     url: raw.url ?? raw.main?.url,
+    coordinates:
+      location?.lat != null && location?.lon != null
+        ? { lat: location.lat, lon: location.lon }
+        : undefined,
+    comments: normalizeComments(raw.comments),
   };
 }
 

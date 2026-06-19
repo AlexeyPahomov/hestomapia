@@ -17,7 +17,7 @@ export function usePlaceDetails() {
     async (id: number, title: string) => {
       const abortController = createAbortController();
 
-      setSelectedPlace({ id, title });
+      setSelectedPlace({ id, title, comments: [] });
       setIsLoading(true);
       setError(null);
 

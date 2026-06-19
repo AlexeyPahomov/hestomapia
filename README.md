@@ -26,7 +26,14 @@ npm install
 npm run dev
 ```
 
-Запросы к Wikimapia API проксируются через Vite (`/api/wikimapia` → `api.wikimapia.org`) из-за ограничений CORS в браузере.
+Запросы к Wikimapia API идут через `/api/wikimapia`. Ключ подставляется на сервере и не попадает в клиентский бандл.
+
+## Деплой на Vercel
+
+1. Добавьте переменную окружения **`WIKIMAPIA_API_KEY`** (без префикса `VITE_`).
+2. Задеплойте проект — маршрут `api/wikimapia.ts` проксирует запросы к Wikimapia.
+
+> Если раньше использовался `VITE_WIKIMAPIA_API_KEY`, ключ был виден в браузере. Рекомендуется сменить ключ в кабинете Wikimapia.
 
 ## Структура проекта (FSD)
 

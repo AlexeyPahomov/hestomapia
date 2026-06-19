@@ -11,8 +11,6 @@ import type {
   WikimapiaPlacesByAreaResponse,
 } from './types';
 
-const API_KEY = import.meta.env.VITE_WIKIMAPIA_API_KEY;
-
 type RequestParams = Record<string, string | number>;
 
 function buildUrl(params: RequestParams): string {
@@ -26,11 +24,7 @@ function buildUrl(params: RequestParams): string {
 }
 
 async function request<T>(params: RequestParams, signal?: AbortSignal): Promise<T> {
-  if (!API_KEY) {
-    throw new Error('VITE_WIKIMAPIA_API_KEY не задан в .env');
-  }
-
-  const response = await fetch(buildUrl({ key: API_KEY, ...params }), { signal });
+  const response = await fetch(buildUrl(params), { signal });
 
   if (!response.ok) {
     throw new Error(`Wikimapia API error: ${response.status}`);
@@ -65,7 +59,7 @@ export async function fetchPlaceById(
       function: 'place.getbyid',
       format: 'json',
       language: 'ru',
-      data_blocks: 'main',
+      data_blocks: 'main,location,comments',
       id,
     },
     signal,

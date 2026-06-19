@@ -16,8 +16,8 @@ export function MainPage() {
   } = usePlaceDetails();
 
   return (
-    <main className="flex h-full w-full">
-      <div className="relative min-w-0 flex-1">
+    <main className="flex h-full w-full flex-col md:flex-row">
+      <div className="relative min-h-0 min-w-0 flex-1">
         <Suspense
           fallback={
             <div className="flex h-full w-full items-center justify-center text-base text-gray-500">
