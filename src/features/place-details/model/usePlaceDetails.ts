@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { fetchPlaceById } from '@shared/api/wikimapia';
+import { fetchPlaceById, getWikimapiaUserMessage } from '@shared/api/wikimapia';
 import type { WikimapiaPlaceDetails } from '@shared/api/wikimapia';
 import { normalizePlaceById } from '@entities/place';
 import { isAbortError, useAbortControllerRef } from '@shared/lib/async';
@@ -35,9 +35,7 @@ export function usePlaceDetails() {
           return;
         }
 
-        setError(
-          cause instanceof Error ? cause.message : 'Не удалось загрузить объект',
-        );
+        setError(getWikimapiaUserMessage(cause, 'Не удалось загрузить объект'));
       } finally {
         setIsLoading(false);
       }

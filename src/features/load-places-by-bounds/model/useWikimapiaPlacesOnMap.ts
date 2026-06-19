@@ -18,10 +18,13 @@ export function useWikimapiaPlacesOnMap({
 }: UseWikimapiaPlacesOnMapOptions) {
   const [queryParams, setQueryParams] = useState<PlacesQueryParams | null>(null);
   const onPlaceClickRef = useRef(onPlaceClick);
+  const isQuotaBlockedRef = useRef(false);
 
   onPlaceClickRef.current = onPlaceClick;
 
-  const { data: placesGeoJSON } = usePlacesInBboxQuery(queryParams);
+  const { placesGeoJSON, loadError, isQuotaBlocked } = usePlacesInBboxQuery(queryParams);
+
+  isQuotaBlockedRef.current = isQuotaBlocked;
 
   useEffect(() => {
     if (!map || !placesGeoJSON) {
@@ -37,6 +40,10 @@ export function useWikimapiaPlacesOnMap({
     }
 
     const unbindLoadTrigger = bindMapPlacesLoadTrigger(map, () => {
+      if (isQuotaBlockedRef.current) {
+        return;
+      }
+
       setQueryParams({
         bbox: getBboxFromMap(map),
         zoom: map.getZoom(),
@@ -52,4 +59,6 @@ export function useWikimapiaPlacesOnMap({
       unbindLayerEvents();
     };
   }, [map]);
+
+  return { loadError };
 }

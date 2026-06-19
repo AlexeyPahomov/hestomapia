@@ -1,6 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
 import type { FeatureCollection, Polygon } from 'geojson';
-import { useEffect } from 'react';
 import { normalizeBbox } from '@shared/lib/maplibre';
 import {
   fetchPlacesGeoJSON,
@@ -9,31 +8,36 @@ import {
   placesQueryOptions,
   type PlacesQueryParams,
 } from '../lib/places-query';
+import { usePlacesLoadError, useQuotaBlockState } from './usePlacesLoadError';
 
 export function usePlacesInBboxQuery(params: PlacesQueryParams | null) {
-  const normalizedBbox = params === null ? null : normalizeBbox(params.bbox);
-  const isEnabled = params !== null && normalizedBbox !== null;
+  const { isQuotaBlocked, blockQuota } = useQuotaBlockState();
 
-  const query = useQuery<FeatureCollection<Polygon>>({
-    queryKey: isEnabled
-      ? getPlacesQueryKey(params.zoom, normalizedBbox)
+  const bbox = params?.bbox;
+  const zoom = params?.zoom;
+  const normalizedBbox = bbox ? normalizeBbox(bbox) : null;
+  const canQuery = bbox !== undefined && zoom !== undefined && normalizedBbox !== null;
+
+  const { data: placesGeoJSON, error } = useQuery<FeatureCollection<Polygon>>({
+    queryKey: canQuery
+      ? getPlacesQueryKey(zoom, normalizedBbox)
       : ([PLACES_QUERY_KEY, 'idle'] as const),
     queryFn: ({ signal }) => {
-      if (!params) {
-        throw new Error('Places query invoked without params');
+      if (!bbox) {
+        throw new Error('Places query invoked without bbox');
       }
 
-      return fetchPlacesGeoJSON(params.bbox, signal);
+      return fetchPlacesGeoJSON(bbox, signal);
     },
-    enabled: isEnabled,
+    enabled: canQuery && !isQuotaBlocked,
     ...placesQueryOptions,
   });
 
-  useEffect(() => {
-    if (query.error) {
-      console.error('Failed to load Wikimapia places:', query.error);
-    }
-  }, [query.error]);
+  const loadError = usePlacesLoadError(error, blockQuota);
 
-  return query;
+  return {
+    placesGeoJSON,
+    loadError,
+    isQuotaBlocked,
+  };
 }

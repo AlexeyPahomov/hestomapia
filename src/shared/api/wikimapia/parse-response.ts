@@ -1,3 +1,5 @@
+import { WikimapiaApiError } from './errors';
+
 export type WikimapiaDebugResponse = {
   debug?: {
     code: number;
@@ -17,9 +19,7 @@ export function parseWikimapiaResponse<T>(data: unknown): T {
   const response = data as WikimapiaDebugResponse;
 
   if (response.debug) {
-    throw new Error(
-      `Wikimapia API: ${response.debug.message} (code ${response.debug.code})`,
-    );
+    throw new WikimapiaApiError(response.debug.code, response.debug.message);
   }
 
   return data as T;

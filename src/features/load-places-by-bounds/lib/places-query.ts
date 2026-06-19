@@ -1,14 +1,16 @@
-import { fetchPlacesInBbox, type MapBbox } from '@shared/api/wikimapia';
+import { fetchPlacesInBbox, shouldRetryWikimapiaRequest, type MapBbox } from '@shared/api/wikimapia';
 import { extractPlacesFromResponse, placesToGeoJSON } from '@entities/place';
 
 export const PLACES_QUERY_KEY = 'places';
 
-export const placesQueryOptions = {  staleTime: 15 * 60 * 1000,
+export const placesQueryOptions = {
+  staleTime: 15 * 60 * 1000,
   gcTime: 60 * 60 * 1000,
   refetchOnWindowFocus: false,
   refetchOnReconnect: false,
   refetchOnMount: false,
-} as const;
+  retry: shouldRetryWikimapiaRequest,
+};
 
 export type PlacesQueryParams = {
   bbox: MapBbox;
