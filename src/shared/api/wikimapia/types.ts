@@ -29,6 +29,12 @@ export type WikimapiaComment = {
   date?: number;
 };
 
+export type WikimapiaPhoto = {
+  id: number;
+  previewUrl: string;
+  fullUrl: string;
+};
+
 export type WikimapiaPlaceDetails = WikimapiaPlaceByIdResponse;
 
 export type WikimapiaRawPlaceSummary = {
@@ -56,7 +62,23 @@ export type WikimapiaPlaceByIdResponse = {
   description?: string;
   url?: string;
   coordinates?: WikimapiaCoordinates;
+  photos: WikimapiaPhoto[];
   comments: WikimapiaComment[];
+};
+
+export type WikimapiaRawPlaceByIdResponse = {
+  id: number;
+  title?: string;
+  description?: string;
+  url?: string;
+  main?: {
+    title?: string;
+    description?: string;
+    url?: string;
+  };
+  location?: WikimapiaRawLocation;
+  comments?: WikimapiaRawComment[];
+  photos?: WikimapiaRawPhoto[];
 };
 
 export type WikimapiaRawComment = {
@@ -65,6 +87,15 @@ export type WikimapiaRawComment = {
   message: string;
   date?: number;
   is_deleted?: boolean;
+};
+
+export type WikimapiaRawPhoto = {
+  id: number;
+  status?: number;
+  thumbnail_url?: string;
+  big_url?: string;
+  '960_url'?: string;
+  full_url?: string;
 };
 
 export type WikimapiaRawLocation = {

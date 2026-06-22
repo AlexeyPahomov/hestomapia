@@ -1,5 +1,7 @@
 export const WIKIMAPIA_API_BASE = '/api/wikimapia';
 
+export const WIKIMAPIA_PLACE_DETAILS_DATA_BLOCKS = 'main,location,comments,photos';
+
 // place.getbyarea возвращает [] для многих ключей; box — рабочий аналог.
 export const WIKIMAPIA_BOX_FUNCTION = 'box';
 

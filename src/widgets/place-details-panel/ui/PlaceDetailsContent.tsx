@@ -2,6 +2,7 @@ import type { WikimapiaPlaceDetails } from '@shared/api/wikimapia';
 import { formatCoordinates } from '@entities/place';
 import { DetailField } from '@shared/ui/detail-field';
 import { PlaceCommentList } from './PlaceCommentList';
+import { PlacePhotoGallery } from './PlacePhotoGallery';
 
 type PlaceDetailsContentProps = {
   place: WikimapiaPlaceDetails;
@@ -10,6 +11,8 @@ type PlaceDetailsContentProps = {
 export function PlaceDetailsContent({ place }: PlaceDetailsContentProps) {
   return (
     <div className="space-y-4">
+      {place.photos.length > 0 && <PlacePhotoGallery photos={place.photos} />}
+
       {place.coordinates && (
         <DetailField label="Координаты">
           <p className="font-mono text-sm text-gray-700">

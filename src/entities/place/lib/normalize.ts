@@ -1,22 +1,18 @@
 import type {
   WikimapiaComment,
+  WikimapiaPhoto,
   WikimapiaPlaceByIdResponse,
   WikimapiaPlaceSummary,
   WikimapiaPlacesByAreaResponse,
   WikimapiaRawComment,
-  WikimapiaRawLocation,
+  WikimapiaRawPhoto,
+  WikimapiaRawPlaceByIdResponse,
   WikimapiaRawPlaceSummary,
 } from '@shared/api/wikimapia';
 
-type RawPlaceById = WikimapiaPlaceByIdResponse & {
-  main?: {
-    title?: string;
-    description?: string;
-    url?: string;
-  };
-  location?: WikimapiaRawLocation;
-  comments?: WikimapiaRawComment[];
-};
+function isActivePhoto(photo: WikimapiaRawPhoto): boolean {
+  return photo.status == null || photo.status === 0;
+}
 
 function normalizeComments(comments: WikimapiaRawComment[] = []): WikimapiaComment[] {
   return comments
@@ -27,6 +23,38 @@ function normalizeComments(comments: WikimapiaRawComment[] = []): WikimapiaComme
       message: comment.message,
       date: comment.date,
     }));
+}
+
+function pickPhotoUrl(
+  photo: WikimapiaRawPhoto,
+  ...keys: Array<'big_url' | '960_url' | 'thumbnail_url' | 'full_url'>
+): string | undefined {
+  for (const key of keys) {
+    const value = photo[key]?.trim();
+
+    if (value) {
+      return value;
+    }
+  }
+
+  return undefined;
+}
+
+function normalizePhotos(photos: WikimapiaRawPhoto[] = []): WikimapiaPhoto[] {
+  return photos.flatMap((photo) => {
+    if (!isActivePhoto(photo)) {
+      return [];
+    }
+
+    const previewUrl = pickPhotoUrl(photo, 'big_url', '960_url', 'thumbnail_url');
+    const fullUrl = pickPhotoUrl(photo, 'full_url', 'big_url');
+
+    if (!previewUrl || !fullUrl) {
+      return [];
+    }
+
+    return [{ id: photo.id, previewUrl, fullUrl }];
+  });
 }
 
 function normalizePlaceSummary(place: WikimapiaRawPlaceSummary): WikimapiaPlaceSummary | null {
@@ -44,7 +72,7 @@ function normalizePlaceSummary(place: WikimapiaRawPlaceSummary): WikimapiaPlaceS
   };
 }
 
-export function normalizePlaceById(raw: RawPlaceById): WikimapiaPlaceByIdResponse {
+export function normalizePlaceById(raw: WikimapiaRawPlaceByIdResponse): WikimapiaPlaceByIdResponse {
   const location = raw.location;
 
   return {
@@ -56,6 +84,7 @@ export function normalizePlaceById(raw: RawPlaceById): WikimapiaPlaceByIdRespons
       location?.lat != null && location?.lon != null
         ? { lat: location.lat, lon: location.lon }
         : undefined,
+    photos: normalizePhotos(raw.photos),
     comments: normalizeComments(raw.comments),
   };
 }

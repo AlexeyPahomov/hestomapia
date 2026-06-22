@@ -2,13 +2,14 @@ import {
   PLACES_PER_PAGE,
   WIKIMAPIA_API_BASE,
   WIKIMAPIA_BOX_FUNCTION,
+  WIKIMAPIA_PLACE_DETAILS_DATA_BLOCKS,
 } from '@shared/config/wikimapia';
 import { formatBbox } from './format-bbox';
 import { parseWikimapiaResponse } from './parse-response';
 import type {
   MapBbox,
-  WikimapiaPlaceByIdResponse,
   WikimapiaPlacesByAreaResponse,
+  WikimapiaRawPlaceByIdResponse,
 } from './types';
 
 type RequestParams = Record<string, string | number>;
@@ -53,13 +54,13 @@ export async function fetchPlacesInBbox(
 export async function fetchPlaceById(
   id: number,
   signal?: AbortSignal,
-): Promise<WikimapiaPlaceByIdResponse> {
-  return request<WikimapiaPlaceByIdResponse>(
+): Promise<WikimapiaRawPlaceByIdResponse> {
+  return request<WikimapiaRawPlaceByIdResponse>(
     {
       function: 'place.getbyid',
       format: 'json',
       language: 'ru',
-      data_blocks: 'main,location,comments',
+      data_blocks: WIKIMAPIA_PLACE_DETAILS_DATA_BLOCKS,
       id,
     },
     signal,
