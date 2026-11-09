@@ -23,11 +23,11 @@ export function usePlacesInBboxQuery(params: PlacesQueryParams | null) {
       ? getPlacesQueryKey(zoom, normalizedBbox)
       : ([PLACES_QUERY_KEY, 'idle'] as const),
     queryFn: ({ signal }) => {
-      if (!bbox) {
+      if (!normalizedBbox) {
         throw new Error('Places query invoked without bbox');
       }
 
-      return fetchPlacesGeoJSON(bbox, signal);
+      return fetchPlacesGeoJSON(normalizedBbox, signal);
     },
     enabled: canQuery && !isQuotaBlocked,
     ...placesQueryOptions,
